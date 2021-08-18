@@ -2,7 +2,7 @@ app:
   resource: "../src/Controller/"
   type:     annotation
 
-homepage:
+home:
     path: /
     defaults:
       _controller: App\Controller\DefaultController::indexAction
