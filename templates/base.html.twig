@@ -16,6 +16,9 @@
         <!-- Custom CSS -->
         <link href="{{ asset('css/shop-homepage.css') }}" rel="stylesheet">
 
+        <!-- Global CSS -->
+        <link href="{{ asset('css/global.css') }}" rel="stylesheet">
+
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -25,15 +28,9 @@
     </head>
 
     <body>
-        <nav class="navbar navbar-light navbar-fixed-top" style="background-color: #e3f2fd;" role="navigation">
-            <div class="container">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="{% if app.user %}{{ path('home') }}{% else %}{{ path('app_login') }}{% endif %}">To Do List app</a>
-
-                    <img src="{{ asset('img/Logo_OpenClassrooms.png') }}" alt="OpenClassrooms" />
-                </div>
-            </div>
-        </nav>
+        <!-- Header -->
+        {% include 'include/header.html.twig' %}
+        <!-- /.Headeer -->
 
         <!-- Page Content -->
         <div class="container">
@@ -78,19 +75,14 @@
                 </div>
             </div>
         </div>
-        <!-- /.container -->
+        <!-- /.Page Content -->
 
         <div class="container">
 
             <hr>
-            <footer>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <p class="pull-right">Copyright &copy; OpenClassrooms</p>
-                    </div>
-                </div>
-            </footer>
-
+            <!-- Footer -->
+            {% include 'include/footer.html.twig' %}
+            <!-- /.Footer -->
         </div>
 
         <script src="{{ asset('js/jquery.js') }}"></script>
