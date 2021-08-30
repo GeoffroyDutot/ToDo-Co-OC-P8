@@ -47,7 +47,6 @@ class TaskTest extends KernelTestCase {
         $this->assertCount($number, $errors, implode(',', $errorsMessages));
     }
 
-
     /**
      * Test create a task
      */

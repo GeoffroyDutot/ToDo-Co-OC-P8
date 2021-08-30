@@ -25,12 +25,16 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=25, unique=true)
+     * @Assert\Type("string")
+     * @Assert\Length(min = 1, max = 25, minMessage = "Le nom d'utilisateur doit faire plus  d'{{ limit }} charactères", maxMessage = "Le nom d'utilisateur ne doit pas excédere {{ limit }} charactères", allowEmptyString = false)
      * @Assert\NotBlank(message="Vous devez saisir un nom d'utilisateur.")
      */
     private $username;
 
     /**
      * @ORM\Column(type="string")
+     * @Assert\Type("string")
+     * @Assert\NotBlank(message="Vous devez saisir un mot de passe.")
      */
     private $password;
 
