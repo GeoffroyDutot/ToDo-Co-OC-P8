@@ -20,23 +20,27 @@ class Task
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\Type("datetime")
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="string")
+     * @Assert\Type("string")
      * @Assert\NotBlank(message="Vous devez saisir un titre.")
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\Type("string")
      * @Assert\NotBlank(message="Vous devez saisir du contenu.")
      */
     private $content;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Assert\Type("bool")
      */
     private $isDone;
 
