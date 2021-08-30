@@ -6,10 +6,11 @@
         "php": "^7.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "doctrine/doctrine-migrations-bundle": "^3.0",
+        "composer/package-versions-deprecated": "1.11.99.3",
         "doctrine/doctrine-bundle": "^2.4",
         "doctrine/doctrine-cache-bundle": "^1.2",
-        "symfony/orm-pack": "*",
+        "doctrine/doctrine-migrations-bundle": "^3.0",
+        "doctrine/orm": "^2.9",
         "sensio/framework-extra-bundle": "^5.0",
         "symfony/apache-pack": "^1.0",
         "symfony/asset": "4.4.*",
@@ -24,6 +25,7 @@
         "symfony/monolog-bundle": "3.7.*",
         "symfony/polyfill-apcu": "^1.0",
         "symfony/process": "4.4.*",
+        "symfony/proxy-manager-bridge": "4.4.*",
         "symfony/security-bundle": "4.4.*",
         "symfony/security-csrf": "4.4.*",
         "symfony/stopwatch": "4.4.*",
@@ -35,11 +37,12 @@
         "twig/extensions": "^1.5"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "^4.4",
-        "symfony/debug-pack": "*",
+        "phpunit/phpunit": "^9.5",
+        "symfony/browser-kit": "^4.4",
+        "symfony/css-selector": "^4.4",
+        "symfony/debug-bundle": "^4.4",
         "symfony/maker-bundle": "^1.0",
-        "symfony/profiler-pack": "*",
-        "symfony/test-pack": "*"
+        "symfony/phpunit-bridge": "^4.4"
     },
     "config": {
         "preferred-install": {
