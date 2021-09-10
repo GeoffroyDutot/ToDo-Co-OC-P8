@@ -81,6 +81,31 @@ class SecurityControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Bienvenue sur Todo List, l\'application vous permettant de gérer l\'ensemble de vos tâches sans effort !');
     }
 
-    // @TODO Test logout
+    /**
+     * Test Logout - Redirect login
+     */
+    public function testLogoutAuthUser()
+    {
+        $user = $this->getUser($this->client);
+        $this->login($this->client, $user);
+
+        $this->client->request('GET', '/logout');
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
+        $this->client->followRedirect();
+        $this->assertSelectorTextContains('button', 'Se connecter');
+    }
+
+    /**
+     * Test Logout with No Auth User - Redirect login
+     */
+    public function testLogoutAnonymousUser()
+    {
+        $this->client->request('GET', '/logout');
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
+        $this->client->followRedirect();
+        $this->assertSelectorTextContains('button', 'Se connecter');
+    }
 }
 
