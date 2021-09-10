@@ -35,6 +35,6 @@ trait LoginTest {
      * Get an admin user
      */
     public function getAdminUser(KernelBrowser $client) {
-        return $client->getContainer()->get('doctrine')->getRepository(User::class)->findOneBy(['roles' => ['ROLE_ADMIN']]);
+        return $client->getContainer()->get('doctrine')->getRepository(User::class)->findOneByUsername('Geoffroy');
     }
 }
