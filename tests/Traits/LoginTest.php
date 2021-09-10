@@ -28,7 +28,7 @@ trait LoginTest {
      * Get a classic user
      */
     public function getUser(KernelBrowser $client) {
-        return $client->getContainer()->get('doctrine')->getRepository(User::class)->findOneBy(['roles' => ['']]);
+        return $client->getContainer()->get('doctrine')->getRepository(User::class)->findOneByUsername('user');
     }
 
     /**

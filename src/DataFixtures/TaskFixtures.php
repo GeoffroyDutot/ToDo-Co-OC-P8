@@ -37,6 +37,15 @@ class TaskFixtures extends Fixture implements DependentFixtureInterface {
 
         $manager->persist($task2);
 
+        $task3 = new Task();
+        $task3->setTitle('Titre');
+        $task3->setContent('Next');
+        $task3->setCreatedAt(new \DateTime('now'));
+        $task3->toggle(true);
+        $task3->setAuthor(null);
+
+        $manager->persist($task3);
+
         $manager->flush();
     }
 
