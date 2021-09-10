@@ -6,6 +6,5 @@
 
         <button type="submit" class="btn btn-success pull-right">Ajouter</button>
     {{ form_end(form) }}
-
-    <a href="{{ path('task_list') }}" class="btn btn-primary">Retour à la liste des tâches</a>
+    <a href="{% if app.request.headers.get('referer') is same as (url('task_create')) %}{{ path('home') }}{% elseif app.request.headers.get('referer') is defined %}{{ app.request.headers.get('referer') }}{% endif %}" class="btn btn-primary">Retour à la liste des tâches</a>
 {% endblock %}
