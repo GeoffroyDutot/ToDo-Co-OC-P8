@@ -4,6 +4,7 @@
 namespace App\Tests\Controller;
 
 
+use App\Entity\User;
 use App\Tests\Traits\LoginTest;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -151,7 +152,9 @@ class UserControllerTest extends WebTestCase {
      */
     public function testEditUserAnonymousUser()
     {
-        $this->client->request('GET', '/users/3/edit');
+        $userId = $this->client->getContainer()->get('doctrine')->getRepository(User::class)->findOneByUsername('James')->getId();
+
+        $this->client->request('GET', '/users/'. $userId . '/edit');
 
         $this->assertResponseRedirects('/login');
         $this->client->followRedirect();
@@ -167,7 +170,9 @@ class UserControllerTest extends WebTestCase {
         $user = $this->getUser($this->client);
         $this->login($this->client, $user);
 
-        $this->client->request('GET', '/users/3/edit');
+        $userId = $this->client->getContainer()->get('doctrine')->getRepository(User::class)->findOneByUsername('James')->getId();
+
+        $this->client->request('GET', '/users/'. $userId . '/edit');
 
         $this->assertResponseRedirects('/');
         $this->client->followRedirect();
@@ -182,7 +187,9 @@ class UserControllerTest extends WebTestCase {
         $user = $this->getAdminUser($this->client);
         $this->login($this->client, $user);
 
-        $this->client->request('GET', '/users/3/edit');
+        $userId = $this->client->getContainer()->get('doctrine')->getRepository(User::class)->findOneByUsername('James')->getId();
+
+        $this->client->request('GET', '/users/'. $userId . '/edit');
 
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
     }
@@ -195,7 +202,9 @@ class UserControllerTest extends WebTestCase {
         $user = $this->getAdminUser($this->client);
         $this->login($this->client, $user);
 
-        $crawler = $this->client->request('GET', '/users/3/edit');
+        $userId = $this->client->getContainer()->get('doctrine')->getRepository(User::class)->findOneByUsername('James')->getId();
+
+        $crawler = $this->client->request('GET', '/users/'. $userId . '/edit');
         $form = $crawler->selectButton('Modifier')->form([
             'user[username]' => 'James44',
             'user[password][first]' => 'Passsswooord',
@@ -218,7 +227,9 @@ class UserControllerTest extends WebTestCase {
         $user = $this->getAdminUser($this->client);
         $this->login($this->client, $user);
 
-        $crawler = $this->client->request('GET', '/users/3/edit');
+        $userId = $this->client->getContainer()->get('doctrine')->getRepository(User::class)->findOneByUsername('JamesT')->getId();
+
+        $crawler = $this->client->request('GET', '/users/'. $userId . '/edit');
         $form = $crawler->selectButton('Modifier')->form([
             'user[username]' => 'James44',
             'user[password][first]' => 'Passsswooord',

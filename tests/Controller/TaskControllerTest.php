@@ -4,6 +4,7 @@
 namespace App\Tests\Controller;
 
 
+use App\Entity\Task;
 use App\Tests\Traits\LoginTest;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -114,7 +115,9 @@ class TaskControllerTest extends WebTestCase
      * Test toggle task with anonymous user
      */
     public function testToggleTaskAnonymousUser() {
-        $this->client->request('GET', '/tasks/1/toggle');
+        $taskId = $this->client->getContainer()->get('doctrine')->getRepository(Task::class)->findOneBy(['isDone' => 0])->getId();
+
+        $this->client->request('GET', '/tasks/'. $taskId . '/toggle');
 
         $this->assertResponseRedirects('/login');
         $this->client->followRedirect();
@@ -130,7 +133,9 @@ class TaskControllerTest extends WebTestCase
         $user = $this->getUser($this->client);
         $this->login($this->client, $user);
 
-        $this->client->request('GET', '/tasks/1/toggle');
+        $taskId = $this->client->getContainer()->get('doctrine')->getRepository(Task::class)->findOneBy(['isDone' => 0])->getId();
+
+        $this->client->request('GET', '/tasks/'. $taskId . '/toggle');
 
         $this->assertResponseRedirects('/tasks');
         $this->client->followRedirect();
@@ -145,23 +150,22 @@ class TaskControllerTest extends WebTestCase
         $user = $this->getUser($this->client);
         $this->login($this->client, $user);
 
-        $this->client->request('GET', '/tasks/1/toggle');
+        $taskId = $this->client->getContainer()->get('doctrine')->getRepository(Task::class)->findOneBy(['isDone' => 0])->getId();
+
+        $this->client->request('GET', '/tasks/'. $taskId . '/toggle');
 
         $this->assertResponseRedirects('/tasks');
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-success');
     }
 
-
-    //@TODO Check to do tasks page -> to do tasks
-    //@TODO Check tasks done page -> finished tasks
-    // And change toggle task to -> page from
-
     /**
      * Test edit task with anonymous user
      */
     public function testEditTaskAnonymousUser() {
-        $this->client->request('GET', '/tasks/1/edit');
+        $taskId = $this->client->getContainer()->get('doctrine')->getRepository(Task::class)->findOneBy(['title' => 'Titre de la tâche'])->getId();
+
+        $this->client->request('GET', '/tasks/'. $taskId . '/edit');
 
         $this->assertResponseRedirects('/login');
         $this->client->followRedirect();
@@ -176,7 +180,9 @@ class TaskControllerTest extends WebTestCase
         $user = $this->getUser($this->client);
         $this->login($this->client, $user);
 
-        $crawler = $this->client->request('GET', '/tasks/1/edit');
+        $taskId = $this->client->getContainer()->get('doctrine')->getRepository(Task::class)->findOneBy(['title' => 'Titre de la tâche'])->getId();
+
+        $crawler = $this->client->request('GET', '/tasks/'. $taskId . '/edit');
         $form = $crawler->selectButton('Modifier')->form([
             'task[title]' => 'Nouveau titre de la tâche',
             'task[content]' => 'Contenu de la tâche'
@@ -196,7 +202,9 @@ class TaskControllerTest extends WebTestCase
         $user = $this->getUser($this->client);
         $this->login($this->client, $user);
 
-        $crawler = $this->client->request('GET', '/tasks/1/edit');
+        $taskId = $this->client->getContainer()->get('doctrine')->getRepository(Task::class)->findOneBy(['title' => 'Titre de la tâche'])->getId();
+
+        $crawler = $this->client->request('GET', '/tasks/'. $taskId . '/edit');
         $form = $crawler->selectButton('Modifier')->form([
             'task[title]' => 'Le titre de la tâche',
             'task[content]' => null
@@ -210,7 +218,9 @@ class TaskControllerTest extends WebTestCase
      * Test delete task with anonymous user
      */
     public function testDeleteTaskAnonymousUser() {
-        $this->client->request('GET', '/tasks/1/delete');
+        $taskId = $this->client->getContainer()->get('doctrine')->getRepository(Task::class)->findOneBy(['title' => 'Titre de la tâche'])->getId();
+
+        $this->client->request('GET', '/tasks/'. $taskId . '/delete');
 
         $this->assertResponseRedirects('/login');
         $this->client->followRedirect();
@@ -219,13 +229,47 @@ class TaskControllerTest extends WebTestCase
     }
 
     /**
-     * Test delete task - Remove & redirect to list & show success
+     * Test user delete anonymous author's task - Redirect list and show error
+     */
+    public function testUserDeleteTaskAnonymousAuthor() {
+        $user = $this->getUser($this->client);
+        $this->login($this->client, $user);
+
+        $taskId = $this->client->getContainer()->get('doctrine')->getRepository(Task::class)->findOneBy(['title' => 'Titre'])->getId();
+
+        $this->client->request('GET', '/tasks/'. $taskId . '/delete');
+
+        $this->assertResponseRedirects('/');
+        $this->client->followRedirect();
+        $this->assertSelectorExists('.alert.alert-danger');
+    }
+
+    /**
+     * Test Admin can delete task with anonymous author - Remove & redirect to list & show success
+     */
+    public function testAdminDeleteTaskAnonymousAuthor() {
+        $user = $this->getAdminUser($this->client);
+        $this->login($this->client, $user);
+
+        $taskId = $this->client->getContainer()->get('doctrine')->getRepository(Task::class)->findOneBy(['author' => null])->getId();
+
+        $this->client->request('GET', '/tasks/'. $taskId . '/delete');
+
+        $this->assertResponseRedirects('/tasks');
+        $this->client->followRedirect();
+        $this->assertSelectorExists('.alert.alert-success');
+    }
+
+    /**
+     * Test user delete his own task - Remove & redirect to list & show success
      */
     public function testDeleteTask() {
         $user = $this->getUser($this->client);
         $this->login($this->client, $user);
 
-        $this->client->request('GET', '/tasks/1/delete');
+        $taskId = $this->client->getContainer()->get('doctrine')->getRepository(Task::class)->findOneBy(['title' => 'Titre autre'])->getId();
+
+        $this->client->request('GET', '/tasks/'. $taskId . '/delete');
 
         $this->assertResponseRedirects('/tasks');
         $this->client->followRedirect();
