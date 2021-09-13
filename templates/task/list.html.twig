@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block header_img %}<img class="slide-image" src="{{ asset('img/todolist_content.jpg') }}" alt="todo list">{% endblock %}
+{% block header_img %}<img class="slide-image" src="{% if app.request.pathinfo is same as('/tasks-to-do') %}{{ asset('img/todolist_content.jpg') }}{% else %}{{ asset('img/todolist_content_finished.png') }}{% endif %}" alt="todo list">{% endblock %}
 
 {% block body %}
     <div class="row actions-nav">

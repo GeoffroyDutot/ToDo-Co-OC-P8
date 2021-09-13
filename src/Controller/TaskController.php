@@ -11,11 +11,19 @@ use Symfony\Component\HttpFoundation\Request;
 class TaskController extends AbstractController
 {
     /**
-     * @Route("/tasks", name="task_list")
+     * @Route("/tasks-to-do", name="task_to_do_list")
      */
-    public function listAction()
+    public function listTaskToDo()
     {
-        return $this->render('task/list.html.twig', ['tasks' => $this->getDoctrine()->getRepository(Task::class)->findAll()]);
+        return $this->render('task/list.html.twig', ['tasks' => $this->getDoctrine()->getRepository(Task::class)->findBy(['isDone' => 0])]);
+    }
+
+    /**
+     * @Route("/tasks-finished", name="task_finished_list")
+     */
+    public function listTaskFinished()
+    {
+        return $this->render('task/list.html.twig', ['tasks' => $this->getDoctrine()->getRepository(Task::class)->findBy(['isDone' => 1])]);
     }
 
     /**
@@ -38,7 +46,7 @@ class TaskController extends AbstractController
 
             $this->addFlash('success', 'La tâche a été bien été ajoutée.');
 
-            return $this->redirectToRoute('task_list');
+            return $this->redirectToRoute('task_to_do_list');
         }
 
         return $this->render('task/create.html.twig', ['form' => $form->createView()]);
@@ -58,7 +66,11 @@ class TaskController extends AbstractController
 
             $this->addFlash('success', 'La tâche a bien été modifiée.');
 
-            return $this->redirectToRoute('task_list');
+            if ($task->isDone()) {
+                return $this->redirectToRoute('task_finished_list');
+            }
+
+            return $this->redirectToRoute('task_to_do_list');
         }
 
         return $this->render('task/edit.html.twig', [
@@ -72,12 +84,18 @@ class TaskController extends AbstractController
      */
     public function toggleTask(Task $task)
     {
+        $taskStatus = $task->isDone();
+
         $task->toggle(!$task->isDone());
         $this->getDoctrine()->getManager()->flush();
 
         $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
 
-        return $this->redirectToRoute('task_list');
+        if ($taskStatus) {
+            return $this->redirectToRoute('task_finished_list');
+        }
+
+        return $this->redirectToRoute('task_to_do_list');
     }
 
     /**
@@ -89,12 +107,18 @@ class TaskController extends AbstractController
             $this->denyAccessUnlessGranted('ROLE_ADMIN');
         }
 
+        $taskStatus = $task->isDone();
+
         $em = $this->getDoctrine()->getManager();
         $em->remove($task);
         $em->flush();
 
         $this->addFlash('success', 'La tâche a bien été supprimée.');
 
-        return $this->redirectToRoute('task_list');
+        if ($taskStatus) {
+            return $this->redirectToRoute('task_finished_list');
+        }
+
+        return $this->redirectToRoute('task_to_do_list');
     }
 }
