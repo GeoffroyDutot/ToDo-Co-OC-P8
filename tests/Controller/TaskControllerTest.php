@@ -29,7 +29,7 @@ class TaskControllerTest extends WebTestCase
         $user = $this->getUser($this->client);
         $this->login($this->client, $user);
 
-        $this->client->request('GET', '/tasks');
+        $this->client->request('GET', '/tasks-to-do');
 
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
     }
@@ -39,7 +39,33 @@ class TaskControllerTest extends WebTestCase
      */
     public function testTasksToDoAnonymousUser()
     {
-        $this->client->request('GET', '/tasks');
+        $this->client->request('GET', '/tasks-to-do');
+
+        $this->assertResponseRedirects('/login');
+        $this->client->followRedirect();
+        $this->assertSelectorTextContains('button', 'Se connecter');
+        $this->assertSelectorExists('.alert.alert-danger');
+    }
+
+    /**
+     * Test User Auth try to access to tasks finished list
+     */
+    public function testTasksFinishedAuthUser()
+    {
+        $user = $this->getUser($this->client);
+        $this->login($this->client, $user);
+
+        $this->client->request('GET', '/tasks-finished');
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+    }
+
+    /**
+     * Test User Not Auth try to access to tasks finished list - Redirect login and flash error
+     */
+    public function testTasksFinishedAnonymousUser()
+    {
+        $this->client->request('GET', '/tasks-finished');
 
         $this->assertResponseRedirects('/login');
         $this->client->followRedirect();
@@ -88,7 +114,7 @@ class TaskControllerTest extends WebTestCase
         ]);
         $this->client->submit($form);
 
-        $this->assertResponseRedirects('/tasks');
+        $this->assertResponseRedirects('/tasks-to-do');
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-success');
     }
@@ -133,11 +159,13 @@ class TaskControllerTest extends WebTestCase
         $user = $this->getUser($this->client);
         $this->login($this->client, $user);
 
-        $taskId = $this->client->getContainer()->get('doctrine')->getRepository(Task::class)->findOneBy(['isDone' => 0])->getId();
+        $task = $this->client->getContainer()->get('doctrine')->getRepository(Task::class)->findOneBy(['isDone' => 0]);
+        $taskId = $task->getId();
+        $taskStatus = $task->isDone();
 
         $this->client->request('GET', '/tasks/'. $taskId . '/toggle');
 
-        $this->assertResponseRedirects('/tasks');
+        $taskStatus ? $this->assertResponseRedirects('/tasks-finished') : $this->assertResponseRedirects('/tasks-to-do');
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-success');
     }
@@ -150,11 +178,13 @@ class TaskControllerTest extends WebTestCase
         $user = $this->getUser($this->client);
         $this->login($this->client, $user);
 
-        $taskId = $this->client->getContainer()->get('doctrine')->getRepository(Task::class)->findOneBy(['isDone' => 0])->getId();
+        $task = $this->client->getContainer()->get('doctrine')->getRepository(Task::class)->findOneBy(['isDone' => 0]);
+        $taskId = $task->getId();
+        $taskStatus = $task->isDone();
 
         $this->client->request('GET', '/tasks/'. $taskId . '/toggle');
 
-        $this->assertResponseRedirects('/tasks');
+        $taskStatus ? $this->assertResponseRedirects('/tasks-finished') : $this->assertResponseRedirects('/tasks-to-do');
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-success');
     }
@@ -180,7 +210,9 @@ class TaskControllerTest extends WebTestCase
         $user = $this->getUser($this->client);
         $this->login($this->client, $user);
 
-        $taskId = $this->client->getContainer()->get('doctrine')->getRepository(Task::class)->findOneBy(['title' => 'Titre de la tâche'])->getId();
+        $task = $this->client->getContainer()->get('doctrine')->getRepository(Task::class)->findOneBy(['title' => 'Titre de la tâche']);
+        $taskId = $task->getId();
+        $taskStatus = $task->isDone();
 
         $crawler = $this->client->request('GET', '/tasks/'. $taskId . '/edit');
         $form = $crawler->selectButton('Modifier')->form([
@@ -189,7 +221,7 @@ class TaskControllerTest extends WebTestCase
         ]);
         $this->client->submit($form);
 
-        $this->assertResponseRedirects('/tasks');
+        $taskStatus ? $this->assertResponseRedirects('/tasks-finished') : $this->assertResponseRedirects('/tasks-to-do');
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-success');
     }
@@ -251,11 +283,13 @@ class TaskControllerTest extends WebTestCase
         $user = $this->getAdminUser($this->client);
         $this->login($this->client, $user);
 
-        $taskId = $this->client->getContainer()->get('doctrine')->getRepository(Task::class)->findOneBy(['author' => null])->getId();
+        $task = $this->client->getContainer()->get('doctrine')->getRepository(Task::class)->findOneBy(['author' => null]);
+        $taskId = $task->getId();
+        $taskStatus = $task->isDone();
 
         $this->client->request('GET', '/tasks/'. $taskId . '/delete');
 
-        $this->assertResponseRedirects('/tasks');
+        $taskStatus ? $this->assertResponseRedirects('/tasks-finished') : $this->assertResponseRedirects('/tasks-to-do');
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-success');
     }
@@ -267,11 +301,13 @@ class TaskControllerTest extends WebTestCase
         $user = $this->getUser($this->client);
         $this->login($this->client, $user);
 
-        $taskId = $this->client->getContainer()->get('doctrine')->getRepository(Task::class)->findOneBy(['title' => 'Titre autre'])->getId();
+        $task = $this->client->getContainer()->get('doctrine')->getRepository(Task::class)->findOneBy(['title' => 'Titre autre']);
+        $taskId = $task->getId();
+        $taskStatus = $task->isDone();
 
         $this->client->request('GET', '/tasks/'. $taskId . '/delete');
 
-        $this->assertResponseRedirects('/tasks');
+        $taskStatus ? $this->assertResponseRedirects('/tasks-finished') : $this->assertResponseRedirects('/tasks-to-do');
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-success');
     }
