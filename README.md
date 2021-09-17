@@ -4,7 +4,7 @@
 
 [contact@geoffroydutot.fr](mailto:contact@geoffroydutot.fr)
 ## Badge  
-[![Codacy Badge](public/img/code-coverage.png)
+Code Coverage Total : ![Codacy Badge](public/img/code-coverage.png)
 ## Introduction
 This project is the 9th project of the [Developer PHP / Symfony](https://openclassrooms.com/fr/paths/59-developpeur-dapplication-php-symfony) formation of [Openclassrooms](https://openclassrooms.com/).
 
