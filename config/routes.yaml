@@ -1,0 +1,8 @@
+app:
+  resource: "../src/Controller/"
+  type:     annotation
+
+home:
+    path: /
+    defaults:
+      _controller: App\Controller\DefaultController::indexAction
