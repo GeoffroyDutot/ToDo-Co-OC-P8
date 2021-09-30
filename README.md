@@ -30,23 +30,15 @@ We also need to make UML's diagram's, quality and performance audit and suggest 
 ## Installation
 
 -   Clone / Download the project
-
 -   Configure your web server to point on the project directory
-
 -   Composer install
-
 -   Copy the .env.template file and rename it to .env 
-
 -   Edit the .env file to connect it with your database server
-
 -   Run the command to create the database :  `php bin/console doctrine:database:create`
 
 ## Test - PhpUnit
 
-- Edit your .env file with test data
-
-- Create the test database :  `php bin/console doctrine:database:create`
-
-- Load Fixtures : `php bin/console doctrine:fixtures:load --env=test`
-
-- Run test : `vendor/bin/phpunit --coverage-html public/code-coverage`
+-   Edit your .env file with test data
+-   Create the test database :  `php bin/console doctrine:database:create`
+-   Load Fixtures : `php bin/console doctrine:fixtures:load --env=test`
+-   Run test : `vendor/bin/phpunit --coverage-html public/code-coverage`
