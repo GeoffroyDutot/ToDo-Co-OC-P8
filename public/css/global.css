@@ -44,37 +44,37 @@ html {
 }
 
 @media screen and (max-width: 1200px) {
-.navbar-brand {
-  width: 35%;
-}
+  .navbar-brand {
+    width: 35%;
+  }
 }
 
 @media screen and (max-width: 1000px) {
-.navbar-brand {
-  width: 45%;
-}
+  .navbar-brand {
+    width: 45%;
+  }
 }
 
 @media screen and (max-width: 750px) {
-.navbar-brand {
-  width: 55%;
-}
+  .navbar-brand {
+    width: 55%;
+  }
 }
 
 @media screen and (max-width: 650px) {
-.navbar-brand {
-  width: 65%;
-}
+  .navbar-brand {
+    width: 65%;
+  }
 }
 
 @media screen and (max-width: 530px) {
-.navbar-brand {
-  width: 75%;
-}
+  .navbar-brand {
+    width: 75%;
+  }
 }
 
 @media screen and (max-width: 450px) {
-.navbar-brand {
-  width: 100%;
-}
+  .navbar-brand {
+    width: 100%;
+  }
 }
